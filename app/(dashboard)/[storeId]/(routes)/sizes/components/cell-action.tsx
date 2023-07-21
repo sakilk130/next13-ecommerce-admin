@@ -1,25 +1,24 @@
 'use client';
 
+import axios from 'axios';
 import { Copy, Edit, MoreHorizontal, Trash } from 'lucide-react';
+import { useParams, useRouter } from 'next/navigation';
 import { FC, useState } from 'react';
+import { toast } from 'react-hot-toast';
 
+import AlertModal from '@/components/modals/alert-modal';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { BillboardColumn } from './columns';
-import AlertModal from '@/components/modals/alert-modal';
-import { useParams, useRouter } from 'next/navigation';
-import axios from 'axios';
-import { toast } from 'react-hot-toast';
+import { SizeColumn } from './columns';
 
 interface CellActionProps {
-  data: BillboardColumn;
+  data: SizeColumn;
 }
 
 const CellAction: FC<CellActionProps> = ({ data }) => {
@@ -32,13 +31,11 @@ const CellAction: FC<CellActionProps> = ({ data }) => {
   const onConfirm = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/${params.storeId}/billboards/${data.id}`);
-      toast.success('Billboard deleted.');
+      await axios.delete(`/api/${params.storeId}/sizes/${data.id}`);
+      toast.success('Size deleted.');
       router.refresh();
     } catch (error) {
-      toast.error(
-        'Make sure you removed all categories using this billboard first.'
-      );
+      toast.error('Make sure you removed all products using this size first.');
     } finally {
       setOpen(false);
       setLoading(false);
@@ -47,7 +44,7 @@ const CellAction: FC<CellActionProps> = ({ data }) => {
 
   const onCopy = (id: string) => {
     navigator.clipboard.writeText(id);
-    toast.success('Billboard ID copied to clipboard.');
+    toast.success('Size ID copied to clipboard.');
   };
 
   return (
@@ -71,9 +68,7 @@ const CellAction: FC<CellActionProps> = ({ data }) => {
             <Copy className="w-4 h-4 mr-2" /> Copy Id
           </DropdownMenuItem>
           <DropdownMenuItem
-            onClick={() =>
-              router.push(`/${params.storeId}/billboards/${data.id}`)
-            }
+            onClick={() => router.push(`/${params.storeId}/sizes/${data.id}`)}
           >
             <Edit className="w-4 h-4 mr-2" /> Update
           </DropdownMenuItem>
